@@ -29,7 +29,7 @@ class Planet(db.Model, SerializerMixin):
     mission_field = relationship(
         'Mission', back_populates='planet_field', cascade='all, delete, delete-orphan')
     # Add serialization rules
-    serialize_rules = ('-mission_field', '-scientist_field')
+    serialize_rules = ('-mission_field')
 
 
 class Scientist(db.Model, SerializerMixin):
@@ -43,7 +43,7 @@ class Scientist(db.Model, SerializerMixin):
     mission_field = relationship(
         'Mission', back_populates='scientist_field', cascade='all, delete, delete-orphan')
     # Add serialization rules
-    serialize_rules = ('-mission_field', '-planet_field')
+    serialize_rules = ('-mission_field')
     # Add validation
 
     @validates('name')
