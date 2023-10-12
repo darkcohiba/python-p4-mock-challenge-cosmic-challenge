@@ -54,9 +54,11 @@ def patch_scientists(id):
     sci = Scientist.query.filter_by(id=id).first()
     data = request.get_json()
 
+
     if not sci:
         return make_response({"error": "Scientist not found"}, 404)
-    
+
+
     try:
         for field in data:
             setattr(sci, field, data[field])
@@ -79,6 +81,35 @@ def delete_scientists(id):
 
     return make_response({"message":"This rizz was deleted by tri, you punk"}, 226)
 
+
+
+@app.get('/planets')
+def get_planets():
+    response_dict_list = [p.to_dict() for p in Planet.query.all()]
+    return make_response(response_dict_list, 200)
+
+
+@app.get('/missions')
+def get_missions():
+    response_dict_list = [m.to_dict() for m in Mission.query.all()]
+    return make_response(response_dict_list, 200)
+
+@app.post('/missions')
+def post_mission():
+    request_object = request.get_json()
+    try:
+        new_mission = Mission(
+            name=request_object['name'],
+            scientist_id=request_object['scientist_id'],
+            planet_id=request_object['planet_id']
+        )
+        db.session.add(new_mission)
+        db.session.commit()
+    except Exception as e:
+        # different way to show our errors
+        message = {'errors': [e.__str__()]}
+        return make_response(message, 422)
+    return make_response(new_mission.to_dict(), 201)
 
 
 
